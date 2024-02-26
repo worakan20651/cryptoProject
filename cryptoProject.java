@@ -1,15 +1,6 @@
-import java.io.*;
-import java.nio.file.Files;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.random.RandomGenerator;
-import java.util.Arrays;
 
-/**
- * Copy one file to another using low level byte streams, one byte at a time.
- * 
- * @author www.codejava.net
- */
+
 public class cryptoProject {
 
     public static void main(String[] args) {
@@ -32,7 +23,7 @@ public class cryptoProject {
         long prime = Generator.GenPrime(bit_size, filename);
         System.out.println("prime is " + prime);
         long[] arr = Generator.GenRandomNowithInverse(prime);
-        System.out.println(Arrays.toString(arr));
+        System.out.println("Number : "+ arr[0] + " | inverse : "+ arr[1] + " | Prime : "+ arr[2]);
         // long number = GenRandomNowithInverse((int)bit_size);
 
         // System.out.println(isPrime(3532802839l));

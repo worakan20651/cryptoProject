@@ -60,6 +60,12 @@ public class Generator {
         return prime;
     }
 
+    /**
+     * Copy one file to another using low level byte streams, one byte at a time.
+     * 
+     * @author www.codejava.net
+     */
+
     // read file and convert to binary
     private static String toBinary(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
@@ -148,15 +154,15 @@ public class Generator {
             // System.out.println("Test with a " + a);
             // System.out.println("a : " + a);
             // calculating final value using formula
-            System.out.println("round " + t + " test with " + a);
+            // System.out.println("round " + t + " test with " + a);
             long result = (fastExpo(a, e, n));
 
             // System.out.println("check " + n + "with " + a);
             // if not equal, try for different base
             if (result == 1 || result == (n - 1)) {
-                System.out.println("result " + a + " with " + result);
+                // System.out.println("result " + a + " with " + result);
             } else {
-                System.out.println("result " + a + " with " + result);
+                // System.out.println("result " + a + " with " + result);
                 return false;
             }
             t++;
@@ -183,10 +189,10 @@ public class Generator {
         long[] arr = new long[3];
         arr[2] = n;
         do {
-            arr[0] = random.nextLong() % (n - 1) + 1; // Generate a random number e in the range [1, n-1]
+            arr[0] = Math.abs(random.nextLong() % (n - 1) + 1); // Generate a random number e in the range [1, n-1]
         } while (GCD(arr[0], n) != 1); // Repeat until GCD(e, n) == 1
         // System.out.println("random number : " + arr[0]);
-        arr[1] = FindInverse(arr[0],n);
+        arr[1] = FindInverse(arr[0], n);
         return arr;
     }
 }
