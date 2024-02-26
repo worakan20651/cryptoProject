@@ -6,8 +6,8 @@ import java.util.Random;
 public class Generator {
 
     private static int bit_size;
-    private static String fileName; 
-    
+    private static String fileName;
+
     // Generate prime number
     public static long GenPrime(int size, String file) {
         bit_size = size;
@@ -126,7 +126,7 @@ public class Generator {
 
             // b must be even now
             // Divide b by 2 and square a
-            a = (a*a) % n;
+            a = (a * a) % n;
             b = b / 2;
         }
         return res % n;
@@ -148,15 +148,14 @@ public class Generator {
             // System.out.println("Test with a " + a);
             // System.out.println("a : " + a);
             // calculating final value using formula
-            System.out.println("round "+ t + " test with "+ a);
+            System.out.println("round " + t + " test with " + a);
             long result = (fastExpo(a, e, n));
 
             // System.out.println("check " + n + "with " + a);
             // if not equal, try for different base
             if (result == 1 || result == (n - 1)) {
                 System.out.println("result " + a + " with " + result);
-            }
-            else{
+            } else {
                 System.out.println("result " + a + " with " + result);
                 return false;
             }
@@ -179,13 +178,15 @@ public class Generator {
         return (long) sqrtroot;
     }
 
-    public static long GenRandomNowithInverse(int n) {
+    public static long[] GenRandomNowithInverse(long n) {
         Random random = new Random();
-        long e;
+        long[] arr = new long[3];
+        arr[2] = n;
         do {
-            e = random.nextLong() % (n - 1) + 1; // Generate a random number e in the range [1, n-1]
-        } while (GCD(e, n) != 1); // Repeat until GCD(e, n) == 1
-        return e;
+            arr[0] = random.nextLong() % (n - 1) + 1; // Generate a random number e in the range [1, n-1]
+        } while (GCD(arr[0], n) != 1); // Repeat until GCD(e, n) == 1
+        // System.out.println("random number : " + arr[0]);
+        arr[1] = FindInverse(arr[0],n);
+        return arr;
     }
 }
-
