@@ -202,7 +202,15 @@ public class Generator {
             temp = y;
             y = lastY - quotient * y;
             lastY = temp;
+            // System.out.println("a : " + a + " | b " + b + " | s : " + lastX + " | t : " + lastY);
         }
-        return new long[]{lastX, lastY, tempA,tempB}; // Return [x, y, prime] where ax + by = gcd(a, b)
+        if (lastX < 0) {
+            lastX += tempB;
+        }
+        return new long[] { tempA, lastX, tempB }; // Return [x, y, prime] where ax + by = gcd(a, b)
+    }
+
+    public static void main(String[] args) {
+        long[] test = extendedGCD(8, 17);
     }
 }
