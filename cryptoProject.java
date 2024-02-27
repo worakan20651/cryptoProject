@@ -23,8 +23,9 @@ public class cryptoProject {
         long prime = Generator.GenPrime(bit_size, filename);
         System.out.println("prime is " + prime);
         long[] arr = Generator.GenRandomNowithInverse(prime);
-        System.out.println("Number : "+ arr[0] + " | inverse : "+ arr[1] + " | Prime : "+ arr[2]);
+        System.out.println("inverse1 : "+ arr[0] + " | inverse2 : "+ arr[1] + " | randomNum : "+ arr[2]+ " | Prime : "+arr[3]);
         // long number = GenRandomNowithInverse((int)bit_size);
+        // System.out.println(Generator.isPrime(2147483647));
 
         // System.out.println(isPrime(3532802839l));
         // System.out.println(num);

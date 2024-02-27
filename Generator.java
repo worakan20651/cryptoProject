@@ -46,7 +46,8 @@ public class Generator {
         // of the number with set
         // bit at (31 - k)-th position
         // assuming 32 bits are used
-        while ((isPrime(prime) == false) && prime < Math.pow(2, bit_size) - 1) {
+        long bound = (long) Math.pow(2, bit_size) - 1;
+        while ((isPrime(prime) == false) && prime < bound) {
             // System.out.println("Prime checking "+ prime);
             if (prime % 2 != 0) {
                 prime += 2;
@@ -75,7 +76,7 @@ public class Generator {
     }
 
     // check primality using lehman's test with 100 number
-    private static boolean isPrime(long n) {
+    public static boolean isPrime(long n) {
         // กรณีพิเศษเมื่อ n เป็นจำนวนเฉพาะที่มีค่าเล็ก
         if (n == 2 || n == 3 || n == 5)
             return true;
@@ -111,15 +112,6 @@ public class Generator {
         y = x1;
 
         return gcd;
-    }
-
-    private static long FindInverse(long a, long p) {
-        long X;
-        for (X = 1; X < p; X++) {
-            if (((a % p) * (X % p)) % p == 1)
-                return X;
-        }
-        return 1;
     }
 
     private static long fastExpo(long a, long b, long n) {
@@ -159,10 +151,10 @@ public class Generator {
 
             // System.out.println("check " + n + "with " + a);
             // if not equal, try for different base
+            System.out.println("test " + a + " = " + result);
             if (result == 1 || result == (n - 1)) {
                 // System.out.println("result " + a + " with " + result);
             } else {
-                // System.out.println("result " + a + " with " + result);
                 return false;
             }
             t++;
@@ -186,13 +178,31 @@ public class Generator {
 
     public static long[] GenRandomNowithInverse(long n) {
         Random random = new Random();
-        long[] arr = new long[3];
-        arr[2] = n;
+        long e;
         do {
-            arr[0] = Math.abs(random.nextLong() % (n - 1) + 1); // Generate a random number e in the range [1, n-1]
-        } while (GCD(arr[0], n) != 1); // Repeat until GCD(e, n) == 1
+            e = Math.abs(random.nextLong() % (n - 1) + 1); // Generate a random number e in the range [1, n-1]
+        } while (GCD(e, n) != 1); // Repeat until GCD(e, n) == 1
         // System.out.println("random number : " + arr[0]);
-        arr[1] = FindInverse(arr[0], n);
-        return arr;
+        return extendedGCD(e, n);
+    }
+
+    public static long[] extendedGCD(long a, long b) {
+        long x = 0, y = 1, lastX = 1, lastY = 0, temp;
+        long tempB = b, tempA = a;
+        while (b != 0) {
+            long quotient = a / b;
+            long remainder = a % b;
+            a = b;
+            b = remainder;
+
+            temp = x;
+            x = lastX - quotient * x;
+            lastX = temp;
+
+            temp = y;
+            y = lastY - quotient * y;
+            lastY = temp;
+        }
+        return new long[]{lastX, lastY, tempA,tempB}; // Return [x, y, prime] where ax + by = gcd(a, b)
     }
 }
