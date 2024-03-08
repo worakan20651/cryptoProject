@@ -1,5 +1,5 @@
 import random
-
+from cryptoMath import mod_exp
 def to_binary(file_content):
     binary = ""
     for byte in file_content:
@@ -21,7 +21,7 @@ def is_prime(n):
 
     # Use Lehman Test to check if n is prime
     if lehman_test(n):
-        print("Found prime", n)
+        # print("Found prime", n)
         return True
     return False
     
@@ -47,16 +47,18 @@ def gen_prime(size, file_name):
 
     print("Number generate:", tmp)
     prime = int(tmp, 2)
-    print("First number generate:", prime)
+    # print("First number generate:", prime)
     
     bound = (1 << size) - 1
-    while not is_prime(prime) and prime < bound:
+    while (prime < bound):
+        if is_prime(prime):
+            if is_safePrime(prime):
+                return prime
         if prime % 2 != 0:
             prime += 2
         else:
             prime += 1
-
-    return prime
+    return 0
 
 def lehman_test(n):
     rand = random.Random()
@@ -69,7 +71,7 @@ def lehman_test(n):
     # Iterate to check for different base values for the given number of tries 't'
     while t < 100:
         a = rand.randint(2, n - 3)
-        result = fast_expo(a, e, n)
+        result = mod_exp(a, e, n)
         if result == 1 or result == n - 1:
             pass
         else:
@@ -79,12 +81,8 @@ def lehman_test(n):
     # Return positive after attempting
     return True
 
-def fast_expo(base, exponent, mod):
-    result = 1
-    base = base % mod
-    while exponent > 0:
-        if exponent % 2 == 1:
-            result = (result * base) % mod
-        exponent = exponent >> 1
-        base = (base * base) % mod
-    return result
+def is_safePrime(p):
+    # print(p, " with : ", (p*2)+1 ,"Result : ",is_prime((p*2)+1))
+    if is_prime((p*2)+1):
+        return True
+    return False

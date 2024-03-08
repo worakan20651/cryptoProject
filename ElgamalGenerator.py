@@ -1,6 +1,7 @@
 import random
 import os
 from sympy import isprime
+from cryptoMath import mod_exp
 
 def run(prime):
     generator = GenGenerator(prime)
@@ -19,7 +20,7 @@ def GenGenerator(p):
             primitiveSet.append(num)
             
     g = random.choice(primitiveSet)
-    print(primitiveSet)
+    # print(primitiveSet)
     return g
 
 def CheckGenerator(n, phi ,factors, p):
@@ -49,24 +50,6 @@ def euler_totient(n):
 
     return result
 
-# Fast modular exponentiation
-def mod_exp(base, exp, modulus):
-    result = 1
-    while exp > 0:
-        # check if exp is odd
-        if exp % 2 == 1:
-            result = (result * base) % modulus
-            
-        exp = exp // 2
-        base = (base * base) % modulus
-        
-    return result % modulus
-
-def gcd(a, b):
-    while b != 0:
-        a, b = b, a % b
-    return a
-
 # find set of factors(n)
 def prime_factors(n):
     factors = set()
@@ -82,63 +65,9 @@ def prime_factors(n):
     return factors
 
 def ElgamalKeyGen(g, p):
+    # random number between [1,prime-2]
     pvK = random.randint(1, p-2)
     
     y = mod_exp(g, pvK, p)
-    # method ที่ใช้ในการ Generate public และ private key pair
-    # Input : ???
-    # Output: ???  private key, public key   
+ 
     return (p, g, y), pvK
-
-
-# def ElgamalEncrypt(filename, p): 
-#     if('.' in filename):
-#         with open(filename, 'rb') as file:
-#             bytes_read = file.read() 
-#     else:
-#         bytes_read = input()
-#     # method ที่ใช้ในการเข้ารหัส  ให้เข้ารหัสได้ทั้งข้อความจากหน้าจอและไฟล์ประเภทต่างๆ
-#     # Input : key ที่ใช้ในการ...รหัส, Plaintext โดยที่ Plaintext เป็นได้ทั้ง ข้อความที่ได้รับมาจากหน้าจอ หรือ ไฟล์ชนิดต่างๆ
-#     # Output: Ciphertext file
-    
-#     a = random.randint(1, p - 2)
-#     e = (p-1)/2
-#     c1 = mod_exp(a, e, p)
-#     c2 = (bytes_read * mod_exp(a, e, p)) % p
-#     return c1, c2
-
-
-# def ElgamalDecrypt():
-#     # method ที่ใช้ในการถอดรหัสไฟล์ ciphertext
-#     # Input : key ที่ใช้ในการ...รหัส, Ciphertext file 
-#     # Output: Plaintext file
-#     return 
-
-# # Extended Euclidean Algorithm to find modular inverse
-# def extended_gcd(a, b):
-#     if a == 0:
-#         return (b, 0, 1)
-#     else:
-#         g, y, x = extended_gcd(b % a, a)
-#         return (g, x - (b // a) * y, y)
-
-# # Modular inverse function
-# def mod_inverse(a, m):
-#     g, x, y = extended_gcd(a, m)
-#     if g != 1:
-#         raise Exception('Modular inverse does not exist')
-#     else:
-#         return x % m
-
-# # Fast modular exponentiation
-# def mod_exp(base, exp, modulus):
-#     result = 1
-#     while exp > 0:
-#         # check if exp is odd
-#         if exp % 2 == 1:
-#             result = (result * base) % modulus
-            
-#         exp = exp // 2
-#         base = (base * base) % modulus
-        
-#     return result % modulus
