@@ -46,7 +46,7 @@ public class Generator {
         // of the number with set
         // bit at (31 - k)-th position
         // assuming 32 bits are used
-        long bound = (long) Math.pow(2, bit_size) - 1;
+        long bound = (1 << size) - 1;
         while ((isPrime(prime) == false) && prime < bound) {
             // System.out.println("Prime checking "+ prime);
             if (prime % 2 != 0) {
@@ -151,7 +151,7 @@ public class Generator {
 
             // System.out.println("check " + n + "with " + a);
             // if not equal, try for different base
-            System.out.println("test " + a + " = " + result);
+            // System.out.println("test " + a + " = " + result);
             if (result == 1 || result == (n - 1)) {
                 // System.out.println("result " + a + " with " + result);
             } else {
@@ -202,7 +202,7 @@ public class Generator {
             temp = y;
             y = lastY - quotient * y;
             lastY = temp;
-            // System.out.println("a : " + a + " | b " + b + " | s : " + lastX + " | t : " + lastY);
+            System.out.println("a : " + a + " | x " + lastX + " | b : " + b + " | y : " + lastY);
         }
         if (lastX < 0) {
             lastX += tempB;

@@ -1,6 +1,4 @@
 import random
-import os
-from sympy import isprime
 from cryptoMath import mod_exp
 
 def run(prime):

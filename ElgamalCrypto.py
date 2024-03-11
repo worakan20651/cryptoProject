@@ -12,35 +12,55 @@ def ElgamalEncrypt(pbK, data):
     # # Output: Ciphertext file
     p, g, y = pbK
     k = random.randint(1, p - 2)
+    
     while cryptoMath.gcd(k,p-1) != 1:
         k = random.randint(1,p-2)
     
     c1 = cryptoMath.mod_exp(g, k, p)
     
     # break character into list
-    en_msg = [char for char in data]
+    # print("Data = ",data)
+    # en_msg = [char for char in data]
+    cipher = data.decode("utf-8")
+    # print("message before encryption = ", en_msg , " \n")
+    
     s = cryptoMath.mod_exp(y, k, p)
-    for i in range(0, len(en_msg)):
-        en_msg[i] = s * ord(en_msg[i])
+    en_msg = []
+    # encrypt data one by one
+    for i in range(len(cipher)):
+        en_msg.append(s * ord(cipher[i]))
+        # print("charactor : ",cipher[i], " into : ", en_msg[i])
         
-    print("c1 ", c1, "\nc2 ", en_msg, "\n")
+    # print("cipher type = ", type(en_msg))
+        
+    # print("c1 ", c1, "\nc2 ", en_msg, "\n")
     return c1,  en_msg
 
 
 def ElgamalDecrypt(cipher, pvK, p):
-    dr_msh = []
+    dr_msg = []
     # Unpack the ciphertext tuple
     
     
     a, b = cipher
-    print("b : ",b)
+    # print("b : ",b)
     
     # Extract components of the private key
     if cryptoMath.mod_exp(a, p-1, p) == 1:
         x = cryptoMath.mod_exp(a, p-1-pvK, p)
-        print("c2 after calculate ", x)
-        plaintext = b * x
     else:
-        print("Something went wrong with ciphertext or private key")
+        return "Something went wrong with ciphertext or private key" 
     
-    return plaintext 
+    print(type(cipher))
+    
+    for i in range(len(b)):
+        c = int(b[i])
+        t = chr((c*x)%p)
+        # print("ch is ", t)
+        dr_msg.append(t)
+    
+    with open('testTxT.txt', 'w')as f:
+        for i in dr_msg:
+            f.write(i)
+    
+    return f
