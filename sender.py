@@ -1,8 +1,9 @@
-# import primeGenerate
-# import ElgamalGenerator
+import primeGenerate
+import ElgamalGenerator
 import ElgamalCrypto
+import fileManage
+import digitalSignature
 
-prime = 911
 try:
     with open("key.txt",'r') as file:
         pbK = file.readline().strip()
@@ -14,11 +15,12 @@ except:
 p, g, y = map(int, pbK.strip('()').split(','))
 
 print("(public key) and private key : ",(p,g,y),pvK)
-signature = ElgamalCrypto.signature(pvK, (p,g,y))
+signature = digitalSignature.signature(pvK, (p,g,y))
 
 print("signature = ", signature)
-cipher = ElgamalCrypto.ElgamalEncrypt((p,g,y), "AB"+str(signature))
+cipher = str(ElgamalCrypto.ElgamalEncrypt((p,g,y),"AB"))+str(signature)
 
 print("cipher = ", cipher)
 # print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", ))
-    
+
+fileManage.writeFile(cipher, "cipher.txt")

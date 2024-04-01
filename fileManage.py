@@ -21,7 +21,7 @@ def read_image_with_metadata(file_path):
         # Close the image file
         img.close()
         return metadata, raw_data
-    
+
     except FileNotFoundError:
         print("File not found")
         return None, None
@@ -29,20 +29,103 @@ def read_image_with_metadata(file_path):
         print("IO Error")
         return None, None
 
+
 def writeFile(content, fileName):
     base_name, file_extension = os.path.splitext(fileName)
-    new_file= f"{base_name}_{1}{file_extension}"
+    new_file = f"{base_name}_{1}{file_extension}"
     try:
-        with open(new_file, "w") as file:
+        with open(new_file, "wb") as file:
             file.write(content)
     except Exception:
         print("something went wrong while writing file")
-        
+
+
 def readFile(fileName):
     try:
-        with open(fileName, "r") as file:
+        with open(fileName, "rb") as file:
             content = file.read()
+    except FileNotFoundError:
+        print("File not found")
+        return None
     except IOError:
         print("file not found")
-        
+
     return content
+
+
+def encode(raw_data, iNumBits):
+    byte_array = bytearray(raw_data)
+
+    z = []
+    k = iNumBits // 8
+    j = -1 * k
+
+    for i in range(len(byte_array)):
+        if i % k == 0:
+            j += k
+            num = 0
+            z.append(0)
+        z[j // k] += byte_array[i] * (2 ** (8 * (i % k)))
+
+    return z
+
+
+def decode(aiPlaintext, iNumBits):
+    bytes_array = []
+    k = iNumBits // 8
+
+    for num in aiPlaintext:
+        for i in range(k):
+            temp = num
+            for j in range(i + 1, k):
+                temp = temp % (2 ** (8 * j))
+            letter = temp // (2 ** (8 * i))
+            bytes_array.append(letter)
+            num = num - (letter * (2 ** (8 * i)))
+
+    decodedText = bytearray(b for b in bytes_array).decode('utf-8')
+
+    return decodedText
+
+
+def encode_and_write_image_with_metadata(file_path, iNumBits):
+    metadata, raw_data = read_image_with_metadata(file_path)
+    if raw_data is not None:
+        encoded_data = encode(raw_data, iNumBits)
+        writeFile(str(encoded_data), file_path)
+        return True
+    else:
+        return False
+
+
+def decode_image_with_metadata(file_path, iNumBits):
+    content = readFile(file_path)
+    if content is not None:
+        decoded_data = decode(eval(content), iNumBits)
+        return decoded_data
+    else:
+        return None
+
+
+# Example usage:
+# Encode data into image*
+iNumBits = 8  # Number of bits per integer
+# encode_and_write_image_with_metadata(file_path, iNumBits)
+
+# Decode data from image
+# decoded_data = decode_image_with_metadata(file_path, iNumBits)
+# print("Decoded Data:", decoded_data)
+
+#ReadFile
+file_path = "C:/code/crypto/cryptoProject/cryptoProject/text.txt"
+content = readFile(file_path)
+if content is not None:
+    print("ข้อมูลที่อ่านได้:")
+    print(content)
+
+#Writefile
+# file_path = "C:/code/crypto/cryptoProject/cryptoProject/text.txt"
+# content_to_write = b""
+# writeFile(content_to_write, file_path)
+# print("ไฟล์ถูกเขียนเรียบร้อยแล้ว")
+

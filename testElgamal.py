@@ -14,8 +14,14 @@ print("prime to use ", prime)
 
 pbK,pvK = ElgamalGenerator.run(prime)
 
+try:
+    with open("key.txt",'w') as file:
+        file.write(str(pbK)+"\n"+str(pvK))
+            
+except:
+    print("error")
 
-# print("(public key) and private key : ",pbK,pvK)
+print("(public key) and private key : ",pbK,pvK)
 # pbK = (911, 296, 620)
 # pvK = 584
 
@@ -36,8 +42,8 @@ pbK,pvK = ElgamalGenerator.run(prime)
 #     print("-------Decryption-------\n")
 #     # plaintext = ElgamalCrypto.ElgamalDecrypt(ciphertext, pvK, prime)
 
-cipher = ElgamalCrypto.ElgamalEncrypt(pbK, "AB")
-print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", prime))
+# cipher = ElgamalCrypto.ElgamalEncrypt(pbK, "AB")
+# print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", prime))
     
 # plaintext = content
 # print("Plaintext = ", plaintext, "\n")
