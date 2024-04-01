@@ -33,12 +33,10 @@ def ElgamalEncrypt(pbK, content):
 
 def ElgamalDecrypt(pvK, content, p):
     de_msg = []
-        
-    print("first byte = ", first_byte)
+    c1, *data = content
     # Convert byte to binary string without padding
-    c1 = int(first_byte)
     print("c1 in byte = ",c1)
-    print("c1 = ", c1)
+    print("c1 = ", c1, "type = ", type(c1))
     # Extract components of the private key
     if cryptoMath.mod_exp(c1, p-1, p) == 1:
         x = cryptoMath.mod_exp(c1, p-1-pvK, p)

@@ -4,7 +4,9 @@ import cryptoMath
 
 try:
     with open("publicKeyDirectory.txt",'r') as file:
+        print("FIle open success")
         pbK = file.readline().strip()
+        p, g, y = map(int, pbK.strip('()').split(','))
 except FileNotFoundError:
     print("Unable to read file file not found")
 except:
@@ -22,7 +24,6 @@ else:
     content = message
     
 # Parse pbK into a tuple of integers
-p, g, y = map(int, pbK.strip('()').split(','))
 
 block_size = cryptoMath.bit10log2(p)
 
