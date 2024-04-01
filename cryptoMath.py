@@ -1,3 +1,6 @@
+import math
+
+
 # Fast modular exponentiation
 def mod_exp(base, exp, modulus):
     result = 1
@@ -42,5 +45,5 @@ def mod_inverse(a, m):
     else:
         return x % m
     
-def bit10log2():
-    pass
+def bit10log2(n):
+    return math.floor(math.log2(n)) + 1

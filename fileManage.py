@@ -34,7 +34,7 @@ def writeFile(content, fileName):
     base_name, file_extension = os.path.splitext(fileName)
     new_file = f"{base_name}_{1}{file_extension}"
     try:
-        with open(new_file, "wb") as file:
+        with open(new_file, "w") as file:
             file.write(content)
     except Exception:
         print("something went wrong while writing file")
@@ -42,7 +42,7 @@ def writeFile(content, fileName):
 
 def readFile(fileName):
     try:
-        with open(fileName, "rb") as file:
+        with open(fileName, "r") as file:
             content = file.read()
     except FileNotFoundError:
         print("File not found")
@@ -53,20 +53,42 @@ def readFile(fileName):
     return content
 
 
-def encode(raw_data, iNumBits):
-    byte_array = bytearray(raw_data)
+#encodes bytes to integers mod p.  reads bytes from file
+def encode(sPlaintext, iNumBits):
+	
+    byte_array = bytearray(sPlaintext, 'utf-16')
 
+	#z is the array of integers mod p
     z = []
-    k = iNumBits // 8
-    j = -1 * k
 
+	#each encoded integer will be a linear combination of k message bytes
+	#k must be the number of bits in the prime divided by 8 because each
+	#message byte is 8 bits long
+    k = iNumBits//8
+
+	#j marks the jth encoded integer
+	#j will start at 0 but make it -k because j will be incremented during first iteration
+    j = -1 * k
+	#num is the summation of the message bytes
+	# i iterates through byte array
+	# Iterate through the byte array
+ 
     for i in range(len(byte_array)):
+    # If i is divisible by k, start a new encoded integer
         if i % k == 0:
             j += k
-            num = 0
-            z.append(0)
-        z[j // k] += byte_array[i] * (2 ** (8 * (i % k)))
+            z.append("")
 
+        # Add the byte as binary string
+        byte_bin = bin(byte_array[i])[2:].zfill(8)  # Convert byte to binary string
+        z[j // k] += byte_bin
+
+		#example
+				#if n = 24, k = n / 8 = 3
+				#z[0] = (summation from i = 0 to i = k)m[i]*(2^(8*i))
+				#where m[i] is the ith message byte
+
+	#return array of encoded integers
     return z
 
 

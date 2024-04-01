@@ -2,7 +2,7 @@ import cryptoMath
 import random
 import hashlib
 
-def ElgamalEncrypt(pbK, data):
+def ElgamalEncrypt(pbK, content):
     p, g, y = pbK
     k = random.randint(1, p - 2)
     s = cryptoMath.mod_exp(y, k, p)
@@ -21,12 +21,11 @@ def ElgamalEncrypt(pbK, data):
     #     else:
     #         content = read_file(data)
     # else:
-
-    content = str(data)
         
     en_msg = []
-    for i in range(len(content)):
-        en_msg.append(s * ord(content[i])%p)
+    for i in content:
+        data = int(i,2)
+        en_msg.append((s *data)%p)
         # print("charactor : ",content[i], " into : ", en_msg[i])
     print("ciphertext = ", en_msg)
     
