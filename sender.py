@@ -1,47 +1,41 @@
 import ElgamalCrypto
 import fileManage
 import cryptoMath
+import sys
 
-try:
-    with open("publicKeyDirectory.txt",'r') as file:
-        print("FIle open success")
-        pbK = file.readline().strip()
-        p, g, y = map(int, pbK.strip('()').split(','))
-except FileNotFoundError:
-    print("Unable to read file file not found")
-except:
-    print("error while read file")
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python your_script.py <input>")
+        sys.exit(1)
+
+    content = sys.argv[1]
+
     
-# message = input("enter message (file/message) : ")
-message = "AB"
+    try:
+        with open("publicKeyDirectory.txt",'r') as file:
+            # print("FIle open success")
+            pbK = file.readline().strip()
+            p, g, y = map(int, pbK.strip('()').split(','))
+    except FileNotFoundError:
+        print("Unable to read file file not found")
+    except:
+        print("error while read file")
 
-if("." in message):
-    print("reading your file to encrypt")
-    content = fileManage.readFile(message)
+    block_size = cryptoMath.bit10log2(p)
 
-else:
-    print("reading your message to encrypt")
-    content = message
-    
-# Parse pbK into a tuple of integers
+    print("block size ", block_size)
 
-block_size = cryptoMath.bit10log2(p)
+    print("Content : ", content)
 
-print("block size ", block_size)
+    # print("(public key) and private key : ",(p,g,y),pvK)
+    # signature = digitalSignature.signature(pvK, (p,g,y))
 
-content = fileManage.encode(content, block_size)
+    # print("signature = ", signature)
+    cipher = str(ElgamalCrypto.ElgamalEncrypt((p,g,y),content, block_size))
 
-print("Content after encode : ", content)
+    print(cipher)
+    # print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", ))
 
-blocked_content = ElgamalCrypto.block_split(content, block_size)
 
-# print("(public key) and private key : ",(p,g,y),pvK)
-# signature = digitalSignature.signature(pvK, (p,g,y))
-
-# print("signature = ", signature)
-cipher = str(ElgamalCrypto.ElgamalEncrypt((p,g,y),content))
-
-print("cipher = ", cipher)
-# print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", ))
-
-fileManage.writeFile(cipher, "cipher.txt")
+print("Start process")
+main()

@@ -42,8 +42,9 @@ def writeFile(content, fileName):
 
 def readFile(fileName):
     try:
-        with open(fileName, "r") as file:
+        with open(fileName, "rb") as file:
             content = file.read()
+            print("content in readFile : ",content)
     except FileNotFoundError:
         print("File not found")
         return None
@@ -53,97 +54,75 @@ def readFile(fileName):
     return content
 
 
-#encodes bytes to integers mod p.  reads bytes from file
-def encode(sPlaintext, iNumBits):
+#convert string to binary representation
+def strToBin(input_str):
 	
-    byte_array = bytearray(sPlaintext, 'utf-16')
+    # str_bin = [bin(ord(char))[2:].zfill(8) for char in sPlaintext]
+    
+    # Convert the string to bytes using the UTF-8 encoding
+    input_bytes = input_str.encode('utf-8')
 
-	#z is the array of integers mod p
-    z = []
-
-	#each encoded integer will be a linear combination of k message bytes
-	#k must be the number of bits in the prime divided by 8 because each
-	#message byte is 8 bits long
-    k = iNumBits//8
-
-	#j marks the jth encoded integer
-	#j will start at 0 but make it -k because j will be incremented during first iteration
-    j = -1 * k
-	#num is the summation of the message bytes
-	# i iterates through byte array
-	# Iterate through the byte array
- 
-    for i in range(len(byte_array)):
-    # If i is divisible by k, start a new encoded integer
-        if i % k == 0:
-            j += k
-            z.append("")
-
-        # Add the byte as binary string
-        byte_bin = bin(byte_array[i])[2:].zfill(8)  # Convert byte to binary string
-        z[j // k] += byte_bin
-
-		#example
-				#if n = 24, k = n / 8 = 3
-				#z[0] = (summation from i = 0 to i = k)m[i]*(2^(8*i))
-				#where m[i] is the ith message byte
-
-	#return array of encoded integers
-    return z
+    # Convert each byte to its binary representation
+    binary_string = ''.join(format(byte, '08b') for byte in input_bytes)
+    
+    
+    str_bin = "".join(str_bin)
+    
+    return str_bin
 
 
-def decode(aiPlaintext, iNumBits):
-    bytes_array = []
-    k = iNumBits // 8
+# def decode(aiPlaintext, iNumBits):
+#     bytes_array = []
+#     k = iNumBits // 8
 
-    for num in aiPlaintext:
-        for i in range(k):
-            temp = num
-            for j in range(i + 1, k):
-                temp = temp % (2 ** (8 * j))
-            letter = temp // (2 ** (8 * i))
-            bytes_array.append(letter)
-            num = num - (letter * (2 ** (8 * i)))
+#     for num in aiPlaintext:
+#         for i in range(k):
+#             temp = num
+#             for j in range(i + 1, k):
+#                 temp = temp % (2 ** (8 * j))
+#             letter = temp // (2 ** (8 * i))
+#             bytes_array.append(letter)
+#             num = num - (letter * (2 ** (8 * i)))
 
-    decodedText = bytearray(b for b in bytes_array).decode('utf-8')
+#     decodedText = bytearray(b for b in bytes_array).decode('utf-8')
 
-    return decodedText
-
-
-def encode_and_write_image_with_metadata(file_path, iNumBits):
-    metadata, raw_data = read_image_with_metadata(file_path)
-    if raw_data is not None:
-        encoded_data = encode(raw_data, iNumBits)
-        writeFile(str(encoded_data), file_path)
-        return True
-    else:
-        return False
+#     return decodedText
 
 
-def decode_image_with_metadata(file_path, iNumBits):
-    content = readFile(file_path)
-    if content is not None:
-        decoded_data = decode(eval(content), iNumBits)
-        return decoded_data
-    else:
-        return None
+# def encode_and_write_image_with_metadata(file_path, iNumBits):
+#     metadata, raw_data = read_image_with_metadata(file_path)
+#     if raw_data is not None:
+#         encoded_data = encode(raw_data, iNumBits)
+#         writeFile(str(encoded_data), file_path)
+#         return True
+#     else:
+#         return False
+
+
+# def decode_image_with_metadata(file_path, iNumBits):
+#     content = readFile(file_path)
+#     if content is not None:
+#         decoded_data = decode(eval(content), iNumBits)
+#         return decoded_data
+#     else:
+#         return None
 
 
 # Example usage:
 # Encode data into image*
-iNumBits = 8  # Number of bits per integer
+# iNumBits = 8  # Number of bits per integer
 # encode_and_write_image_with_metadata(file_path, iNumBits)
 
 # Decode data from image
 # decoded_data = decode_image_with_metadata(file_path, iNumBits)
 # print("Decoded Data:", decoded_data)
 
-#ReadFile
-file_path = "C:/code/crypto/cryptoProject/cryptoProject/text.txt"
-content = readFile(file_path)
-if content is not None:
-    print("ข้อมูลที่อ่านได้:")
-    print(content)
+# #ReadFile
+# file_path = "C:/code/crypto/cryptoProject/cryptoProject/text.txt"
+# content = readFile(file_path)
+# if content is not None:
+#     print("ข้อมูลที่อ่านได้:")
+#     print(content)
 
 #Writefile
 # file_path = "C:/code/crypto/cryptoProject/cryptoProject/text.txt"
