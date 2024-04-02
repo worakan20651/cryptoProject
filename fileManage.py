@@ -42,7 +42,7 @@ def writeFile(content, fileName):
 
 def readFile(fileName):
     try:
-        with open(fileName, "rb") as file:
+        with open(fileName, "r") as file:
             content = file.read()
             print("content in readFile : ",content)
     except FileNotFoundError:

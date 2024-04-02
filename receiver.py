@@ -15,6 +15,14 @@ def main():
     print(content)
     # Your code here that uses user_input
     print("Input received:", content)
+    
+    split_cipher = content.replace("(","").replace(")","").split(",")
+    print(split_cipher)
+
+    # Convert each byte string to its binary representation
+    binary_strings = ElgamalCrypto.byte_to_binary(split_cipher)
+    print(binary_strings)
+
 
     try:
         with open("key.txt",'r') as file:
@@ -25,30 +33,26 @@ def main():
         print("error while read file")
 
     block_size = cryptoMath.bit10log2(p)
+    c1 = binary_strings[0]
+    msg = binary_strings[1]
+    c1_blocked = ElgamalCrypto.block_split(c1, block_size)
+    blocked_msg = ElgamalCrypto.block_split(msg, block_size)
+    print("c1 : ",c1_blocked ," | blocked cipher : ",blocked_msg)
     
-    blocked_cipher = ElgamalCrypto.block_split(content, block_size)
-    print("blocked cipher : ",blocked_cipher)
-    
-    data = ElgamalCrypto.binary_to_str(blocked_cipher)
-    print("Data : ",data)
-    
+    # data = ElgamalCrypto.binary_to_str(blocked_cipher)
+    integer_array = ElgamalCrypto.convert_blocked_to_integer(c1_blocked)
+    print("C1 ", "".join(integer_array))
     print("public and privete ", pbK, pvK)
 
-    comma_idx = content.index(',')
-
-    # Remove the parentheses and split the string by comma
-    content_str = content.strip('()')
-    c1 = int(content_str[:comma_idx-1])
-    print("C1 : ",c1)
-    content = content_str[comma_idx+2:len(content_str)-1]
-    print("Content : ",content)
+    
 
     # print("content = ", c1)
     # print("element " , content, "type = ", type(content))
-    plaintext = str(ElgamalCrypto.ElgamalDecrypt(pvK, c1, content, p, block_size))
+    plaintext = str(ElgamalCrypto.ElgamalDecrypt(pvK, c1, content, p, block_size, c1_blocked , blocked_msg))
     print(plaintext)
     return plaintext
 
 
 print("Start process")
 main()
+

@@ -29,35 +29,52 @@ def ElgamalEncrypt(pbK, content, block_size):
     #         content = read_file(data)
     # else:
     print("content aftersplit encrypt ", content )
-        
+    
+    test = []
+    test.append(c1)
+
+    c1_int = int_to_bin_c1(test)
+    print(c1_int)
+    
     en_msg = []
-    en_msg.append(c1)
+    
     for i in content:
         data = int(i,2)
         print("Data : ", data)
         en_msg.append((s *data)%p)
-        # print("charactor : ",content[i], " into : ", en_msg[i])
+        print("After append : " , data)
     
     # print("en_msg before ", en_msg)
     en_msg = int_to_binary_to_byte(en_msg)
     print("message ",en_msg)
     
-    # Convert binary strings to integers
-    integers = [int(binary, 2) for binary in en_msg]
+    # # Convert binary strings to integers
+    # integers = [int(binary, 2) for binary in en_msg]
 
-    # Convert integers to bytes
-    byte_string = bytes(integers)
-    print(byte_string)
+    # # Convert integers to bytes
+    # byte_string = bytes(integers)
+    # print(byte_string)
+    
+    print(" c1 + en_msg : ", c1_int)
     
     # en_msg = block_split(c1+cipherJoin, block_size)
-    return byte_string
+    return c1_int, en_msg
 
-def ElgamalDecrypt(pvK, c1, content, p, block_size):
+def ElgamalDecrypt(pvK, c1, content, p, block_size, c1_block, block_msg):
+    
+    
     de_msg = []
 
     block_size = cryptoMath.bit10log2(p)
     
     print("c1 = ", c1, "type = ", type(c1))
+    
+    #convert binary to int 
+    c1_int = convert_blocked_to_integer(c1_block)
+    msg_int = convert_blocked_to_integer(block_msg)
+    
+    print("c1 : " , c1_int , "msg" , block_msg)
+    
     
     if cryptoMath.mod_exp(c1, p-1, p) == 1:
         x = cryptoMath.mod_exp(c1, p-1-pvK, p)
@@ -71,7 +88,7 @@ def ElgamalDecrypt(pvK, c1, content, p, block_size):
     # print("type of cipher now", type(content))
     
     for i in content:
-        # data = int(i,2)
+        data = int(i,2)
         t = (i*x)%p
         print("ch is ", t)
         
@@ -147,8 +164,25 @@ def cipher_to_pt(data):
     
     return characters
 
+def int_to_bin_c1(numbers):
+    byte_arrays = []
+    print("number to convert ", numbers)
+    binary_list = [bin(number)[2:] for number in numbers]
+    print("Binary representation ", binary_list)
+
+    binary_string = ''.join(binary_list)
+    print("Bin ", binary_string)
+    
+     # Convert binary string to an integer
+    integer_value = int(binary_string, 2)
+    # Convert integer to a single byte
+    byte_value = integer_value.to_bytes((integer_value.bit_length() + 7) // 8, 'big')
+    return byte_value
+
+
 def int_to_binary_to_byte(numbers):
     byte_arrays = []
+    print("number to convert ", numbers)
     binary_list = [bin(number)[2:] for number in numbers]
     print("Binary representation ", binary_list)
 
@@ -160,15 +194,44 @@ def int_to_binary_to_byte(numbers):
 
     print("split bit ", split_bit)
     
-    byte_arrays = []
+    binary_arrays = []
     for byte_string in split_bit:
         print(byte_string, " ", len(byte_string))
         if(len(byte_string) < 8):
             byte_string = padding.pad_with_zeros(byte_string)
-        byte_arrays.append(byte_string)
-    # print("sending : ",byte_arrays)
+        binary_arrays.append(byte_string)
     
-    return byte_arrays
+    # Convert each binary string to an integer
+    integers = [int(binary, 2) for binary in binary_arrays]
+
+    # Convert integers to bytes
+    byte_string = b''.join(i.to_bytes((i.bit_length() + 7) // 8, 'big') for i in integers)
+
+    print(byte_string)
+    return byte_string
 
     # return byte_arrays
     
+
+def byte_to_binary(byte_strings):
+    binary_strings = []
+    for byte_string in byte_strings:
+        byte = byte_string.encode()  # Convert byte string to bytes
+        binary_string = ''.join(format(byte, '08b') for byte in byte)  # Convert bytes to binary
+        binary_strings.append(binary_string)
+    return binary_strings
+
+def binary_to_int(binary_string): 
+    return int(binary_string,2)
+
+def convert_blocked_to_integer(blocked): 
+    print("convert start")
+    integer_vals = []
+    for binary_string in blocked:
+        print("binary_string ", binary_string)
+        integer_vals = binary_to_int(binary_string)
+        print("convert complet ", integer_vals)
+        integer_vals.append(integer_vals)
+        
+    print("int vals ", integer_vals)
+    return integer_vals
