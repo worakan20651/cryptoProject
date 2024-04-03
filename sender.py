@@ -9,7 +9,6 @@ def main():
         sys.exit(1)
 
     content = sys.argv[1]
-
     
     try:
         with open("publicKeyDirectory.txt",'r') as file:

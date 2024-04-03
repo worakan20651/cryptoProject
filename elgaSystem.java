@@ -21,7 +21,7 @@ public class elgaSystem {
                     int bits = in.nextInt();
                     try {
                         String key = "";
-                        String str = "python ElgamalGenerator.py  \"" + bits + "\"";
+                        String str = "python ElgamalGenerator.py " + bits;
 
                         // String Str = "ls -l";
                         String[] command = str.split(" ");
@@ -39,10 +39,12 @@ public class elgaSystem {
                             key = line;
                         }
 
-                        // Wait for the process to finish
-                        process.waitFor();
+                        // Wait for the process to complete
+                        int exitCode = process.waitFor();
+                        System.out.println("Python script execution finished with exit code: " + exitCode);
 
-                        fileManage.writeFile(key, "publicKeyDirectory.txt");
+                        System.out.println("your key is " + key);
+
 
                     } catch (Exception e) {
                         System.err.println("Something went wrong with input");
@@ -50,14 +52,14 @@ public class elgaSystem {
                     break;
 
                 case 'S':
-                    System.out.print("Enter file/message you want to send : ");
-                    filename = in.nextLine();
+                    System.out.println("Enter file/message you want to send : ");
+                    filename = in.next();
                     MySender.main(filename);
                     break;
 
                 case 'R':
-                    System.out.print("Enter file/message you want to send : ");
-                    filename = in.nextLine();
+                    System.out.println("Enter file/message you want to read : ");
+                    filename = in.next();
                     MyReceiver.main(filename);
                     break;
 

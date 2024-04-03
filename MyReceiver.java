@@ -35,8 +35,6 @@ public class MyReceiver {
             // Handle any IO exceptions that may occur
             e.printStackTrace();
         }
-
-
         
 
         try {
@@ -58,7 +56,6 @@ public class MyReceiver {
                 plaintext = line;
             }
 
-            // Wait for the process to finish
             process.waitFor();
 
         } catch (IOException | InterruptedException e) {

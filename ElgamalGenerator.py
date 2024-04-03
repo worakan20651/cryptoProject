@@ -1,9 +1,33 @@
 import random
 from cryptoMath import mod_exp
+import primeGenerate
+import sys
+import fileManage
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python your_script.py <input>")
+        sys.exit(1)
+
+    size = int(sys.argv[1])
+    # size = 30
+    print("size = ", size)
+    
+    print("Start to generate your prime")
+    prime = primeGenerate.gen_prime(size)
+    print("your prime is ", prime)
+    
+    print("Start to generate your key pair")
+    pbK, pvK = run(prime)
+    print("your key pair is")
+    print(pbK, pvK)
+    content = str(pbK) + " " + str(pvK)
+    fileManage.writeFile(content, "key.txt")
 
 def run(prime):
     generator = GenGenerator(prime)
     pbK, pvK = ElgamalKeyGen(generator, prime)
+    print(pbK, pvK)
     return pbK, pvK
 
 def GenGenerator(p):
@@ -69,3 +93,6 @@ def ElgamalKeyGen(g, p):
     y = mod_exp(g, pvK, p)
  
     return (p, g, y), pvK
+
+print("Start generate pair key process")
+main()

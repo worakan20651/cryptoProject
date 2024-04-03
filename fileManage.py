@@ -44,7 +44,7 @@ def readFile(fileName):
     try:
         with open(fileName, "r") as file:
             content = file.read()
-            print("content in readFile : ",content)
+            # print("content in readFile : ",content)
     except FileNotFoundError:
         print("File not found")
         return None

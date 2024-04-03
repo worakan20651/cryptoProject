@@ -16,7 +16,7 @@ def ElgamalEncrypt(pbK, content, block_size):
     
     print("s = ", s, "\nk = ", k)
     
-    print("content before encrypt ", content )
+    # print("content before encrypt ", content)
     
     content = block_split(content, block_size)
     # print(len(data))
@@ -28,25 +28,32 @@ def ElgamalEncrypt(pbK, content, block_size):
     #     else:
     #         content = read_file(data)
     # else:
-    print("content aftersplit encrypt ", content )
+    # print("content aftersplit encrypt ", content)
     
-    test = []
-    test.append(c1)
+    print("check c1 bin ", c1)
+    # test = []
+    # test.append(bin(c1)[2:])
+    test = str(bin(c1)[2:])
+    print("c1 test ",test)
 
-    c1_int = int_to_bin_c1(test)
-    print(c1_int)
+    c1_int = int_to_byte(test)
+    print("C1 = ", c1_int)
     
     en_msg = []
     
     for i in content:
         data = int(i,2)
-        print("Data : ", data)
-        en_msg.append((s *data)%p)
-        print("After append : " , data)
+        cipher = (s *data)%p
+        bi = bin(cipher)[2:]
+        # print("Data : ", data)
+        en_msg.append(bi)
+        # print("After append : " , data)
+    cipher_msg = "".join(en_msg)
+    print("cipher message ",cipher_msg)
     
+    #from binary to bytesX
     # print("en_msg before ", en_msg)
-    en_msg = int_to_binary_to_byte(en_msg)
-    print("message ",en_msg)
+    en_msg = int_to_byte(cipher_msg)
     
     # # Convert binary strings to integers
     # integers = [int(binary, 2) for binary in en_msg]
@@ -125,11 +132,13 @@ def block_split(text, block_size):
     """
     blocks = []
     for i in range(0, len(text), block_size):
-        bin = text[i:i+block_size]
-        if(len(bin)==block_size):
-            blocks.append(bin)
+        bi = text[i:i+block_size]
+        # blocks.append(bin)
+        if(len(bi)==block_size):
+            blocks.append(bi)
         else:
-            blocks.append(padding.pad_with_ones(bin,block_size))
+            blocks.append(bin(int(bi))[2:].zfill(block_size))
+    print("block split to ", blocks)
     return blocks
 
 def str_to_binary(data):
@@ -164,53 +173,40 @@ def cipher_to_pt(data):
     
     return characters
 
-def int_to_bin_c1(numbers):
-    byte_arrays = []
-    print("number to convert ", numbers)
-    binary_list = [bin(number)[2:] for number in numbers]
-    print("Binary representation ", binary_list)
-
-    binary_string = ''.join(binary_list)
-    print("Bin ", binary_string)
+def int_to_byte(numbers):
+    print("binary to convert:", numbers)
     
-     # Convert binary string to an integer
-    integer_value = int(binary_string, 2)
-    # Convert integer to a single byte
-    byte_value = integer_value.to_bytes((integer_value.bit_length() + 7) // 8, 'big')
+    # Pad the binary string to make its length a multiple of 8
+    padded_binary_string = numbers.zfill(((len(numbers) + 7) // 8) * 8)
+    print("padded = ", padded_binary_string)
+
+    # binary_strings = block_split(padded_binary_string, 8)
+    # byte_value = []
+    # for binary in binary_strings:
+    #     val = binary_to_int(binary)
+    #     print("int after binary ", val)
+    #     byte_value.append(val.to_bytes(2,'big'))
+    
+    # print("Byte value:", byte_value)
+    
+    integer_value = int(padded_binary_string,2)
+    byte_value = integer_value.to_bytes(2, 'big')
     return byte_value
 
+# def int_to_binary_to_byte(numbers):
+#     byte_arrays = []
+#     print("number to convert ", numbers)
+#     binary_list = [bin(number)[2:] for number in numbers]
+#     print("Binary representation ", binary_list)
 
-def int_to_binary_to_byte(numbers):
-    byte_arrays = []
-    print("number to convert ", numbers)
-    binary_list = [bin(number)[2:] for number in numbers]
-    print("Binary representation ", binary_list)
-
-    binary_string = ''.join(binary_list)
-    print("Bin ", binary_string)
+#     binary_string = ''.join(binary_list)
+#     print("Bin ", binary_string)
   
-    # Split the binary string into substrings of 8 bits (1 byte)
-    split_bit = [binary_string[i:i+8] for i in range(0, len(binary_string), 8)]
+#     # Convert binary string to byte representation
+#     byte = int(binary_string, 2).to_bytes((len(binary_string) + 7) // 8, byteorder='big')
 
-    print("split bit ", split_bit)
-    
-    binary_arrays = []
-    for byte_string in split_bit:
-        print(byte_string, " ", len(byte_string))
-        if(len(byte_string) < 8):
-            byte_string = padding.pad_with_zeros(byte_string)
-        binary_arrays.append(byte_string)
-    
-    # Convert each binary string to an integer
-    integers = [int(binary, 2) for binary in binary_arrays]
-
-    # Convert integers to bytes
-    byte_string = b''.join(i.to_bytes((i.bit_length() + 7) // 8, 'big') for i in integers)
-
-    print(byte_string)
-    return byte_string
-
-    # return byte_arrays
+#     print(byte)
+#     return byte
     
 
 def byte_to_binary(byte_strings):
@@ -223,7 +219,6 @@ def byte_to_binary(byte_strings):
 
 def binary_to_int(binary_string): 
     return int(binary_string,2)
-
 def convert_blocked_to_integer(blocked): 
     print("convert start")
     integer_vals = []

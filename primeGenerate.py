@@ -25,9 +25,10 @@ def is_prime(n):
         return True
     return False
     
-def gen_prime(size, file_name):
+def gen_prime(size):
     file_content = ""
     binary = ""
+    file_name ="text.txt"
     try:
         with open(file_name, "rb") as f:
             file_content = f.read()
@@ -53,6 +54,7 @@ def gen_prime(size, file_name):
     while (prime < bound):
         if is_prime(prime):
             if is_safePrime(prime):
+                print(prime)
                 return prime
         if prime % 2 != 0:
             prime += 2
