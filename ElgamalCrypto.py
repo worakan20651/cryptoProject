@@ -62,8 +62,6 @@ def ElgamalEncrypt(pbK, content, block_size):
     # byte_string = bytes(integers)
     # print(byte_string)
     
-    print(" c1 + en_msg : ", c1_int)
-    
     # en_msg = block_split(c1+cipherJoin, block_size)
     return c1_int, en_msg
 
@@ -189,8 +187,15 @@ def int_to_byte(numbers):
     
     # print("Byte value:", byte_value)
     
-    integer_value = int(padded_binary_string,2)
-    byte_value = integer_value.to_bytes(2, 'big')
+    # Split binary string into bytes
+    bytes_list = [padded_binary_string[i:i+8] for i in range(0, len(padded_binary_string), 8)]
+    # print("bytes list ", bytes_list)
+    # Convert each byte to its integer value and then to bytes
+    
+    byte_value = ([int(byte,2) for byte in bytes_list])
+    print("Byte value:", byte_value)
+    
+    
     return byte_value
 
 # def int_to_binary_to_byte(numbers):

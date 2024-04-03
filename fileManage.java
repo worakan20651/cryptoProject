@@ -1,6 +1,9 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,6 +28,21 @@ public class fileManage {
 
         return binary;
     }
+
+    public static String readByteInfile(String filePath) {
+        String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            while ((line = reader.readLine()) != null) {
+                // Process each line (string)
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
     // read file and convert to binary
     public static String toBinary(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
@@ -33,24 +51,29 @@ public class fileManage {
         return sb.toString();
     }
 
-    public static void writeFile(String fileName, String content) {
+    public static void writeFile(String fileName, int[][] intArray) {
         if (fileName == null || fileName.isEmpty()) {
             System.out.println("File name is empty or null.");
             return;
         }
-        try {
-            // Create a FileOutputStream object
-            FileOutputStream fos = new FileOutputStream(fileName);
-    
-            // Convert the string to bytes and write to the file
-            fos.write(content.getBytes());
-    
-            // Close the stream
-            fos.close();
-    
-            System.out.println("Content written to file successfully.");
+
+        try (FileOutputStream fos = new FileOutputStream(fileName);
+                DataOutputStream dos = new DataOutputStream(fos)) {
+
+            // Write each integer as a byte
+            for (int[] row : intArray) {
+                for (int num : row) {
+                    byte byt = (byte) (num);
+                    String s = Integer.toHexString(byt & 0xff);
+                    System.out.println("write \\x" + s);
+                    dos.writeChars("\\x" + s);
+                }
+                dos.writeChars("\n");
+            }
+
+            System.out.println("Array written to file successfully.");
+
         } catch (IOException e) {
-            System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }

@@ -10,32 +10,30 @@ public class MyReceiver {
     public static void main(String args) {
         String input = args;
 
-
         String binary = "";
         String plaintext = "";
         String cipher = "";
 
-         try {
+        try {
             // Create a FileReader object passing it the file path
             FileReader fileReader = new FileReader(input);
-            
+
             // Wrap the FileReader in a BufferedReader for efficient reading
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            
+
             // Read the file line by line
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line); // Print each line
-                cipher = line;
+                cipher += line;
             }
-            
+
             // Close the BufferedReader
             bufferedReader.close();
         } catch (IOException e) {
             // Handle any IO exceptions that may occur
             e.printStackTrace();
         }
-        
 
         try {
             // Command to execute Python script (replace "python3" with "python" if needed)
@@ -62,11 +60,10 @@ public class MyReceiver {
             e.printStackTrace();
         }
 
-        
         try {
             // Create a File object for the file
             File file = new File(input);
-        
+
             // Get the file path
             String filePath = file.getAbsolutePath();
             System.out.println("File path: " + filePath);
@@ -75,6 +72,7 @@ public class MyReceiver {
             e.printStackTrace();
         }
     }
-}
 
     
+
+}

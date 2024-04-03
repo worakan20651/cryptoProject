@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MySender {
     public static void main(String args) {
@@ -78,8 +80,31 @@ public class MySender {
             System.out.println("An error occurred while creating the file.");
             e.printStackTrace();
         }
-
-        fileManage.writeFile(fileName, cipher);
+        int[][] block_cipher = mappingStringToIntArr(cipher);
+        fileManage.writeFile(fileName, block_cipher);
 
     }
+
+    public static int[][] mappingStringToIntArr(String str){
+        // Regular expression to match integers enclosed in square brackets
+        Pattern pattern = Pattern.compile("\\[(\\d+),\\s*(\\d+)\\]");
+        Matcher matcher = pattern.matcher(str);
+
+        int[][] intArray = new int[2][2]; // Initialize a 2x2 array to hold the integers
+
+        int row = 0; // Initialize row index
+        while (matcher.find()) {
+            // Extract and parse the integers
+            int firstInt = Integer.parseInt(matcher.group(1));
+            int secondInt = Integer.parseInt(matcher.group(2));
+
+            // Store the integers in the array
+            intArray[row][0] = firstInt;
+            intArray[row][1] = secondInt;
+
+            // Move to the next row
+            row++;
+        }
+        return intArray;
+    } 
 }

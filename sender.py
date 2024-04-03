@@ -30,9 +30,9 @@ def main():
     # signature = digitalSignature.signature(pvK, (p,g,y))
 
     # print("signature = ", signature)
-    cipher = str(ElgamalCrypto.ElgamalEncrypt((p,g,y),content, block_size))
+    ci, en_msg = ElgamalCrypto.ElgamalEncrypt((p,g,y),content, block_size)
 
-    print(cipher)
+    print(ci, en_msg)
     # print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", ))
 
 

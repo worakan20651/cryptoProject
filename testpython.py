@@ -12,8 +12,10 @@
 #     return byte_value
 
 # # Example usage:
-numbers = 45
+numbers = 43
+
+# numbers = 45
 # byte_value = int_to_bin_c1(numbers)
 # print("Byte value:", byte_value)
 
-print(numbers.to_bytes(2, 'big') )
+print(numbers.to_bytes(numbers.bit_length, 'big') )
