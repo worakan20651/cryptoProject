@@ -9,11 +9,11 @@ public class elgaSystem {
         char mode;
 
         do {
-            System.out.println("Type the MODE you want to use");
             System.out.println("G for Generate your key pair");
             System.out.println("S for Encrypt you message or file");
             System.out.println("R for Decrypt you cipher message or file");
             System.out.println("X to exit this program");
+            System.out.print("Type the MODE you want to use : ");
             mode = in.next().charAt(0);
             switch (mode) {
                 case 'G':
@@ -52,13 +52,13 @@ public class elgaSystem {
                     break;
 
                 case 'S':
-                    System.out.println("Enter file/message you want to send : ");
+                    System.out.print("Enter file/message you want to send : ");
                     filename = in.next();
                     MySender.main(filename);
                     break;
 
                 case 'R':
-                    System.out.println("Enter file/message you want to read : ");
+                    System.out.print("Enter file/message you want to read : ");
                     filename = in.next();
                     MyReceiver.main(filename);
                     break;

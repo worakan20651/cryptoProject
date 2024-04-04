@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
@@ -25,7 +27,7 @@ public class MySender {
                 // Convert string to byte array
                 byte[] byteArray = input.getBytes(charsetName);
                 binary = fileManage.toBinary(byteArray);
-                System.out.println("Binary = " + binary);
+                // System.out.println("Binary = " + binary);
                 fileName = "1_cipher.txt";
 
             } catch (UnsupportedEncodingException e) {
@@ -34,9 +36,11 @@ public class MySender {
 
         }
 
+        String filedata = fileManage.writeBinary(binary, fileName);
+
         try {
             // Command to execute Python script (replace "python3" with "python" if needed)
-            String Str = "python sender.py \"" + binary + "\" " + fileName;
+            String Str = "python sender.py "+ filedata + " " + fileName;
             // String Str = "ls -l";
             String[] command = Str.split(" ");
 
@@ -48,12 +52,12 @@ public class MySender {
             // Read output from Python script
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
-            System.out.println("-----back to java----");
+            // System.out.println("-----back to java----");
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
                 cipher = line;
             }
-            System.out.println("cipher in java " + cipher);
+            // System.out.println("cipher in java " + cipher);
 
             // Wait for the process to finish
             process.waitFor();
@@ -64,26 +68,5 @@ public class MySender {
 
     }
 
-    public static int[][] mappingStringToIntArr(String str){
-        // Regular expression to match integers enclosed in square brackets
-        Pattern pattern = Pattern.compile("\\[(\\d+),\\s*(\\d+)\\]");
-        Matcher matcher = pattern.matcher(str);
-
-        int[][] intArray = new int[2][2]; // Initialize a 2x2 array to hold the integers
-
-        int row = 0; // Initialize row index
-        while (matcher.find()) {
-            // Extract and parse the integers
-            int firstInt = Integer.parseInt(matcher.group(1));
-            int secondInt = Integer.parseInt(matcher.group(2));
-
-            // Store the integers in the array
-            intArray[row][0] = firstInt;
-            intArray[row][1] = secondInt;
-
-            // Move to the next row
-            row++;
-        }
-        return intArray;
-    } 
+    
 }

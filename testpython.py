@@ -1,13 +1,10 @@
-def pkcs7_pad(plaintext, block_size):
-    pad_len = block_size - (len(plaintext) % block_size)
-    padding = bytes([pad_len] * pad_len)
-    return plaintext + padding
+import math
 
-# Example usage:
-plaintext_binary = "11001101"  # Example binary representation string
-block_size = 8  # Example block size (8 bits per block)
+item = 10399
 
-# Pad the plaintext
-padded_plaintext = pkcs7_pad(plaintext_binary.encode(), block_size)
+def main():
+    bit_len = math.ceil(item.bit_length() / 8)
+    c = item.to_bytes(bit_len, byteorder='big')  # Use 'big' byte order
+    print("c (hex) ", c.hex().upper())
 
-print("Padded plaintext (in binary):", padded_plaintext)
+main()

@@ -10,8 +10,9 @@ def main():
 
     content = sys.argv[1]
     fileName = sys.argv[2]
-    
-    
+
+    # print("content in tmp file ",content)
+    content = fileManage.readFile(content)
     try:
         with open("publicKeyDirectory.txt",'r') as file:
             # print("FIle open success")
@@ -24,20 +25,21 @@ def main():
 
     block_size = cryptoMath.bit10log2(p)
 
-    print("block size ", block_size)
+    # print("block size ", block_size)
 
-    print("Content : ", content)
+    # print("Content : ", content)
 
     # print("(public key) and private key : ",(p,g,y),pvK)
     # signature = digitalSignature.signature(pvK, (p,g,y))
 
     # print("signature = ", signature)
+    
     ci, en_msg = ElgamalCrypto.ElgamalEncrypt((p,g,y),content, block_size)
 
-    print(ci, en_msg)
-    fileManage.writeFile((ci+ [0] + en_msg), fileName)
-    # print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", ))
+    print([ci], en_msg)
+    fileManage.writeFile(([ci]+ [0] + en_msg), fileName)
+    print("-------- Your file is already. --------\n")
 
 
-print("Start process")
+print("\n------------ Start process ------------")
 main()

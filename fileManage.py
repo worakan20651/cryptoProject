@@ -3,34 +3,6 @@ from PIL import Image
 import struct
 
 
-def read_image_with_metadata(file_path):
-    filename = file_path
-    try:
-        # Open the image file
-        img = Image.open(filename, mode='r')
-
-        # Convert the image to RGB mode if it's not already in RGB mode
-        if img.mode != 'RGB':
-            img = img.convert('RGB')
-
-        # Convert the image to raw data
-        raw_data = img.tobytes()
-
-        # Get metadata if needed
-        metadata = img.info
-
-        # Close the image file
-        img.close()
-        return metadata, raw_data
-
-    except FileNotFoundError:
-        print("File not found")
-        return None, None
-    except IOError:
-        print("IO Error")
-        return None, None
-
-
 def writeFile(content, fileName):
     base_name, file_extension = os.path.splitext(fileName)
     new_file = f"{base_name}_{1}{file_extension}"
@@ -39,17 +11,37 @@ def writeFile(content, fileName):
         with open(new_file, "wb") as file:
             for item in content:
                 # Iterate over the list
-                c = struct.pack('B', item)
+                if(item == 0):
+                    c = b'\x00'
+                else:
+                    c = struct.pack('>q', item)
+                    # c = item.to_bytes(item.bit_length(), byteorder='big')
+                    c = remove_null_bytes(c)
                 print("write ", c)
                 file.write(c)  # Assuming 4-byte unsigned integers
-            print("complete writing file ", new_file)
+        print("complete writing file ", new_file)
     except Exception:
         print("something went wrong while writing file")
 
+def remove_null_bytes(data):
+    return data.replace(b'\x00', b'')
 
 def readFile(fileName):
     try:
         with open(fileName, "r") as file:
+            content = file.read()
+            # print("content in readFile : ",content)
+    except FileNotFoundError:
+        print("File not found")
+        return None
+    except IOError:
+        print("file not found")
+
+    return content
+
+def read_Byte_in_File(fileName):
+    try:
+        with open(fileName, "rb") as file:
             content = file.read()
             # print("content in readFile : ",content)
     except FileNotFoundError:

@@ -1,11 +1,11 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.ByteBuffer;
 
 
 public class fileManage {
@@ -27,18 +27,17 @@ public class fileManage {
         return binary;
     }
 
-    public static String readByteInfile(String filePath) {
-        String line;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            while ((line = reader.readLine()) != null) {
-                // Process each line (string)
-                System.out.println(line);
-            }
+    public static byte[] readByteInfile(String filename) {
+        byte[] fileContent;
+        try {
+            fileContent = Files.readAllBytes(new File(filename).toPath());
+            System.out.println("test read byte "+ByteBuffer.wrap(fileContent).getInt());
+            return fileContent;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return "";
+        return new byte[0];
     }
 
     // read file and convert to binary
@@ -49,30 +48,18 @@ public class fileManage {
         return sb.toString();
     }
 
-    public static void writeFile(String fileName, int[][] intArray) {
-        if (fileName == null || fileName.isEmpty()) {
-            System.out.println("File name is empty or null.");
-            return;
-        }
-
-        try (FileOutputStream fos = new FileOutputStream(fileName);
-                DataOutputStream dos = new DataOutputStream(fos)) {
-
-            // Write each integer as a byte
-            for (int[] row : intArray) {
-                for (int num : row) {
-                    byte byt = (byte) (num);
-                    String s = Integer.toHexString(byt & 0xff);
-                    System.out.println("write \\x" + s);
-                    dos.writeChars("\\x" + s);
-                }
-                dos.writeChars("\n");
-            }
-
-            System.out.println("Array written to file successfully.");
-
+    
+    public static String writeBinary(String content, String fileName) {
+        String tmpFile = "tmp_"+fileName;
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tmpFile));
+            writer.write(content);
+            writer.close();
+            // System.out.printf("File %s has been written successfully.\n",tmpFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error writing to file: " + e.getMessage());
         }
+
+        return tmpFile;
     }
 }

@@ -17,18 +17,11 @@ def unpad_zeros(padded_plaintext):
     pad_len = 0
     for i in range(len(padded_plaintext) - 1, -1, -1):
         if not marker_found and padded_plaintext[i] == '1':
-            marker_found = True
-        elif marker_found and padded_plaintext[i] == '0':
-            pad_len += 1
-        elif marker_found:
+            pad_len += 1  # Account for the '1' marker
             break
+        elif padded_plaintext[i] == '0':
+            pad_len += 1
         else:
             raise ValueError("Invalid padding marker")
-    if pad_len == 0:
-        raise ValueError("Invalid padding")
-    
-    for i in range(len(padded_plaintext) - pad_len, len(padded_plaintext)):
-        if padded_plaintext[i] != '0':
-            raise ValueError("Invalid padding")
         
     return padded_plaintext[:-pad_len]

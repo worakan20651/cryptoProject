@@ -6,16 +6,12 @@ import java.io.InputStreamReader;
 public class MyReceiver {
     public static void main(String args) {
         String input = args;
-
+        // System.out.println("test input "+input);
         String binary = "";
-        String plaintext = "";
-        String cipher = "";
-
-        cipher = fileManage.readFileContent(input);
 
         try {
             // Command to execute Python script (replace "python3" with "python" if needed)
-            String Str = "python receiver.py \"" + cipher + "\"";
+            String Str = "python receiver.py " + input;
             // String Str = "ls -l";
             String[] command = Str.split(" ");
             System.out.println("Command " + String.join(" ", command));
@@ -29,7 +25,6 @@ public class MyReceiver {
             System.out.println("-----back to java----");
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
-                plaintext = line;
             }
 
             process.waitFor();
@@ -38,17 +33,17 @@ public class MyReceiver {
             e.printStackTrace();
         }
 
-        try {
+        // try {
             // Create a File object for the file
-            File file = new File(input);
+            // File file = new File(input);
 
-            // Get the file path
-            String filePath = file.getAbsolutePath();
-            System.out.println("File path: " + filePath);
-        } catch (Exception e) {
-            System.out.println("An error occurred while creating the file.");
-            e.printStackTrace();
-        }
+        //     // Get the file path
+        //     String filePath = file.getAbsolutePath();
+        //     System.out.println("File path: " + filePath);
+        // } catch (Exception e) {
+        //     System.out.println("An error occurred while creating the file.");
+        //     e.printStackTrace();
+        // }
     }
 
 }
