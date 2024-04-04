@@ -65,12 +65,15 @@ def ElgamalEncrypt(pbK, content, block_size):
     # en_msg = block_split(c1+cipherJoin, block_size)
     return c1_int, en_msg
 
-def ElgamalDecrypt(pvK, c1, content, p, block_size, c1_block, block_msg):
+def ElgamalDecrypt(pvK,content, p, block_size):
     
     
     de_msg = []
 
     block_size = cryptoMath.bit10log2(p)
+    
+    splitted_content = split_list_with_zero(content)
+    print("split to ", splitted_content)
     
     print("c1 = ", c1, "type = ", type(c1))
     
@@ -135,7 +138,7 @@ def block_split(text, block_size):
         if(len(bi)==block_size):
             blocks.append(bi)
         else:
-            blocks.append(bin(int(bi))[2:].zfill(block_size))
+            blocks.append(padding.pad_with_zeros(bi, block_size))
     print("block split to ", blocks)
     return blocks
 
@@ -198,22 +201,6 @@ def int_to_byte(numbers):
     
     return byte_value
 
-# def int_to_binary_to_byte(numbers):
-#     byte_arrays = []
-#     print("number to convert ", numbers)
-#     binary_list = [bin(number)[2:] for number in numbers]
-#     print("Binary representation ", binary_list)
-
-#     binary_string = ''.join(binary_list)
-#     print("Bin ", binary_string)
-  
-#     # Convert binary string to byte representation
-#     byte = int(binary_string, 2).to_bytes((len(binary_string) + 7) // 8, byteorder='big')
-
-#     print(byte)
-#     return byte
-    
-
 def byte_to_binary(byte_strings):
     binary_strings = []
     for byte_string in byte_strings:
@@ -224,6 +211,7 @@ def byte_to_binary(byte_strings):
 
 def binary_to_int(binary_string): 
     return int(binary_string,2)
+
 def convert_blocked_to_integer(blocked): 
     print("convert start")
     integer_vals = []
@@ -235,3 +223,16 @@ def convert_blocked_to_integer(blocked):
         
     print("int vals ", integer_vals)
     return integer_vals
+
+
+def split_list_with_zero(byte_list):
+    sublists = [[]]
+    for num in byte_list:
+        if num == 0:
+            if sublists[-1]:
+                sublists.append([])
+        else:
+            sublists[-1].append(num)
+    # Remove empty sublists
+    sublists = [sublist for sublist in sublists if sublist]
+    return sublists

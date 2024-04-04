@@ -1,8 +1,4 @@
-import primeGenerate
-import ElgamalGenerator
 import ElgamalCrypto
-import fileManage
-import digitalSignature
 import cryptoMath
 import sys
 
@@ -15,13 +11,6 @@ def main():
     print(content)
     # Your code here that uses user_input
     print("Input received:", content)
-    
-    split_cipher = content.replace("(","").replace(")","").split(",")
-    print(split_cipher)
-
-    # Convert each byte string to its binary representation
-    binary_strings = ElgamalCrypto.byte_to_binary(split_cipher)
-    print(binary_strings)
 
 
     try:
@@ -33,22 +22,15 @@ def main():
         print("error while read file")
 
     block_size = cryptoMath.bit10log2(p)
-    c1 = binary_strings[0]
-    msg = binary_strings[1]
-    c1_blocked = ElgamalCrypto.block_split(c1, block_size)
-    blocked_msg = ElgamalCrypto.block_split(msg, block_size)
-    print("c1 : ",c1_blocked ," | blocked cipher : ",blocked_msg)
     
-    # data = ElgamalCrypto.binary_to_str(blocked_cipher)
-    integer_array = ElgamalCrypto.convert_blocked_to_integer(c1_blocked)
-    print("C1 ", "".join(integer_array))
-    print("public and privete ", pbK, pvK)
-
     
+    # Convert binary string to list of integers
+    byte_list = [int(content[i:i+8], 2) for i in range(0, len(content), 8)]
+    print("byte = ",byte_list)    
 
     # print("content = ", c1)
     # print("element " , content, "type = ", type(content))
-    plaintext = str(ElgamalCrypto.ElgamalDecrypt(pvK, c1, content, p, block_size, c1_blocked , blocked_msg))
+    plaintext = str(ElgamalCrypto.ElgamalDecrypt(pvK, byte_list, p, block_size))
     print(plaintext)
     return plaintext
 

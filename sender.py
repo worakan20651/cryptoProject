@@ -4,11 +4,13 @@ import cryptoMath
 import sys
 
 def main():
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         print("Usage: python your_script.py <input>")
         sys.exit(1)
 
     content = sys.argv[1]
+    fileName = sys.argv[2]
+    
     
     try:
         with open("publicKeyDirectory.txt",'r') as file:
@@ -33,6 +35,7 @@ def main():
     ci, en_msg = ElgamalCrypto.ElgamalEncrypt((p,g,y),content, block_size)
 
     print(ci, en_msg)
+    fileManage.writeFile((ci+ [0] + en_msg), fileName)
     # print(ElgamalCrypto.ElgamalDecrypt(pvK, "cipherText1.txt", ))
 
 

@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Scanner;
 
 public class MyReceiver {
     public static void main(String args) {
@@ -14,26 +11,7 @@ public class MyReceiver {
         String plaintext = "";
         String cipher = "";
 
-        try {
-            // Create a FileReader object passing it the file path
-            FileReader fileReader = new FileReader(input);
-
-            // Wrap the FileReader in a BufferedReader for efficient reading
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            // Read the file line by line
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line); // Print each line
-                cipher += line;
-            }
-
-            // Close the BufferedReader
-            bufferedReader.close();
-        } catch (IOException e) {
-            // Handle any IO exceptions that may occur
-            e.printStackTrace();
-        }
+        cipher = fileManage.readFileContent(input);
 
         try {
             // Command to execute Python script (replace "python3" with "python" if needed)
@@ -72,7 +50,5 @@ public class MyReceiver {
             e.printStackTrace();
         }
     }
-
-    
 
 }

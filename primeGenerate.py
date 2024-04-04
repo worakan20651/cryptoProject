@@ -85,6 +85,6 @@ def lehman_test(n):
 
 def is_safePrime(p):
     # print(p, " with : ", (p*2)+1 ,"Result : ",is_prime((p*2)+1))
-    if is_prime((p*2)+1):
+    if is_prime((p-1)//2):
         return True
     return False

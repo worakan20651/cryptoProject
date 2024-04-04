@@ -4,14 +4,12 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 public class fileManage {
-    public static String readFileContent(String filename) {
+    public  static String readFileContent(String filename) {
 
         byte[] fileContent;
         String binary = "";

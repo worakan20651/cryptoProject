@@ -1,5 +1,6 @@
 import os
 from PIL import Image
+import struct
 
 
 def read_image_with_metadata(file_path):
@@ -33,9 +34,15 @@ def read_image_with_metadata(file_path):
 def writeFile(content, fileName):
     base_name, file_extension = os.path.splitext(fileName)
     new_file = f"{base_name}_{1}{file_extension}"
+    print("in print file -- : ", content)
     try:
-        with open(new_file, "w") as file:
-            file.write(content)
+        with open(new_file, "wb") as file:
+            for item in content:
+                # Iterate over the list
+                c = struct.pack('B', item)
+                print("write ", c)
+                file.write(c)  # Assuming 4-byte unsigned integers
+            print("complete writing file ", new_file)
     except Exception:
         print("something went wrong while writing file")
 

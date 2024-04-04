@@ -30,8 +30,9 @@ def run(prime):
     print(pbK, pvK)
     return pbK, pvK
 
+# ย้ายไปใช้สูตรหา generator ใน class -- use safe prime 
 def GenGenerator(p):
-    primitiveSet = []
+    primitiveSet = [] 
     phi = euler_totient(p)
     factor = prime_factors(phi)
     

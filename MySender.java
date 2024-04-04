@@ -36,11 +36,11 @@ public class MySender {
 
         try {
             // Command to execute Python script (replace "python3" with "python" if needed)
-            String Str = "python sender.py \"" + binary + "\"";
+            String Str = "python sender.py \"" + binary + "\" " + fileName;
             // String Str = "ls -l";
             String[] command = Str.split(" ");
 
-            // System.out.println("Command " + String.join(" ", command));
+            System.out.println("Command " + String.join(" ", command));
 
             // Start the process
             Process process = Runtime.getRuntime().exec(command);
@@ -61,27 +61,6 @@ public class MySender {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
-        try {
-            // Create a File object
-            File file = new File(fileName);
-
-            // Create the file if it doesn't exist
-            if (file.createNewFile()) {
-                System.out.println("File created successfully.");
-            } else {
-                System.out.println("File already exists.");
-            }
-
-            // Get the file path
-            String filePath = file.getAbsolutePath();
-            System.out.println("File path: " + filePath);
-        } catch (IOException e) {
-            System.out.println("An error occurred while creating the file.");
-            e.printStackTrace();
-        }
-        int[][] block_cipher = mappingStringToIntArr(cipher);
-        fileManage.writeFile(fileName, block_cipher);
 
     }
 

@@ -1,21 +1,13 @@
-# def int_to_bin_c1(numbers):
-#     byte_arrays = []
-#     print("numbers to convert:", numbers)
-#     binary_list = [bin(number)[2:] for number in numbers]
-#     print("Binary representation:", binary_list)
+def pkcs7_pad(plaintext, block_size):
+    pad_len = block_size - (len(plaintext) % block_size)
+    padding = bytes([pad_len] * pad_len)
+    return plaintext + padding
 
-#     binary_string = ''.join(binary_list)
-#     print("Binary string:", binary_string)
-    
-#     # Convert binary string to bytes
-#     byte_value = int(binary_string, 2).to_bytes((len(binary_string) + 7) // 8, 'big')
-#     return byte_value
+# Example usage:
+plaintext_binary = "11001101"  # Example binary representation string
+block_size = 8  # Example block size (8 bits per block)
 
-# # Example usage:
-numbers = 43
+# Pad the plaintext
+padded_plaintext = pkcs7_pad(plaintext_binary.encode(), block_size)
 
-# numbers = 45
-# byte_value = int_to_bin_c1(numbers)
-# print("Byte value:", byte_value)
-
-print(numbers.to_bytes(numbers.bit_length, 'big') )
+print("Padded plaintext (in binary):", padded_plaintext)
