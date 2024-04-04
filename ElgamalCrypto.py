@@ -25,7 +25,9 @@ def ElgamalEncrypt(pbK, content, block_size):
     
     for i in content:
         data = int(i,2)
+        print("data = ",data)
         cipher = (s *data)%p
+        print("cipher in encrypt ", cipher)
         bi = bin(cipher)[2:]
         print("bi ", bi)
         en_msg.append(bi)
@@ -44,8 +46,14 @@ def ElgamalDecrypt(pvK,cipher, p, block_size):
     unpad_content = padding.unpad_zeros(msg)
     print("unpad msg ", unpad_content)
     
-    msg_unpad_split = block_split(unpad_content, block_size)
+    # split to each byte
+    msg_unpad_split = block_split_without_pad(unpad_content)
     print("unpad split ",msg_unpad_split)
+    
+    real_cipher = "".join(msg_unpad_split)
+    print("real ",real_cipher)
+    split_real = block_split_without_pad(real_cipher, block_size)
+    print("split real ", split_real)
     
     if cryptoMath.mod_exp(c1, p-1, p) == 1:
         x = cryptoMath.mod_exp(c1, p-1-pvK, p)
@@ -54,7 +62,7 @@ def ElgamalDecrypt(pvK,cipher, p, block_size):
         return "Something went wrong with ciphertext or private key" 
     content = []
     
-    for bi in msg_unpad_split:
+    for bi in split_real:
         b = binary_to_int(bi)
         print("bi to int ", b)
         content.append(b)
@@ -78,6 +86,19 @@ def ElgamalDecrypt(pvK,cipher, p, block_size):
     
     return result
 
+def block_split_without_pad(text, block_size=8):
+    blocks = []
+    size = 0
+    for i in range(0, len(text), block_size):
+        if(size > len(text)):
+            bi = text[i:i+size-block_size]
+        else:    
+            bi = text[i:i+block_size]
+        # blocks.append(bin)
+        size += block_size
+        blocks.append(bi)
+    print("block split to ", blocks)
+    return blocks
 
 def block_split(text, block_size=8):
     """
@@ -99,7 +120,7 @@ def block_split(text, block_size=8):
             blocks.append(bi)
         else:
             pad = padding.pad_with_zeros(bi, block_size)
-            print("blocking padd ",pad)
+            print("blocking pad ",pad)
             blocks.append(pad)
     print("block split to ", blocks)
     return blocks

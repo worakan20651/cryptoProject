@@ -13,6 +13,9 @@ def main():
 
     # print("content in tmp file ",content)
     content = fileManage.readFile(content)
+    
+    cut = content.find('1')
+    content = content[cut:]
     try:
         with open("publicKeyDirectory.txt",'r') as file:
             # print("FIle open success")

@@ -12,7 +12,8 @@ def main():
     content = fileManage.read_Byte_in_File('1_text1_1.txt')
     # print(content)
     
-    c1, msg = content.split(b'\x00', 1)
+    c1, msg = content
+    print("c1 ,message in receiver ",c1, msg)
     
     # convert A (Form : bytes) to integer
     c1 = int.from_bytes(c1, byteorder='big')

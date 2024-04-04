@@ -40,17 +40,27 @@ def readFile(fileName):
     return content
 
 def read_Byte_in_File(fileName):
+
     try:
+        print("start read ")
         with open(fileName, "rb") as file:
-            content = file.read()
-            # print("content in readFile : ",content)
+            binary_string = b''
+            byte = file.read(1)
+            while byte != b'\x00':
+                if not byte:
+                    break
+                binary_string += byte # Convert byte to character
+                # print("test ", binary_string)
+                byte = file.read(1)
+            
+            remaining_bytes = file.read()  # Read the remaining bytes after encountering '\x00'
+            return binary_string, remaining_bytes
     except FileNotFoundError:
         print("File not found")
         return None
     except IOError:
         print("file not found")
-
-    return content
+    
 
 
 #convert string to binary representation
