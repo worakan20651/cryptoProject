@@ -8,6 +8,7 @@ def pad_with_ones(data, desired_length):
     return padded_data
 
 def pad_with_zeros(data, block_size=8):
+    
     pad_len = block_size - (len(data) % block_size)
     padding = '1' + '0' * (pad_len - 1)
     return data + padding
@@ -23,5 +24,6 @@ def unpad_zeros(padded_plaintext):
             pad_len += 1
         else:
             raise ValueError("Invalid padding marker")
+    # print("count pad ", pad_len)
         
     return padded_plaintext[:-pad_len]

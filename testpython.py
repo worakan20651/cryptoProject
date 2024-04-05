@@ -1,3 +1,3 @@
 import fileManage
 
-fileManage.read_Byte_in_File('1_text1_1.txt')
+fileManage.writeFile([11], '1_testtest.txt')

@@ -3,6 +3,7 @@ import random
 import padding
 
 def ElgamalEncrypt(pbK, content, block_size):
+    print("Block size = ",block_size)
     p, g, y = pbK
     k = random.randint(1, p - 2)
     
@@ -19,7 +20,7 @@ def ElgamalEncrypt(pbK, content, block_size):
     # print("content before encrypt ", content)
     print("before content : ",content)
     content = block_split(content, block_size)
-    print("content split ", content)
+    # print("content split ", content)
     
     en_msg = []
     
@@ -30,30 +31,26 @@ def ElgamalEncrypt(pbK, content, block_size):
         print("cipher in encrypt ", cipher)
         bi = bin(cipher)[2:]
         print("bi ", bi)
-        en_msg.append(bi)
+        en_msg.append(padding.pad_with_zeros(bi, block_size))
+        
+    print("wait ",en_msg)
 
     cipher_msg = "".join(en_msg)
+    print("check this ", cipher_msg)
 
     en_msg = binary_to_byte(cipher_msg)
     print("en_msg : ", en_msg)
     
     return c1, en_msg
 
-def ElgamalDecrypt(pvK,cipher, p, block_size):
+def ElgamalDecrypt(pvK,cipher, p, block_size, fileName):
     block_size = cryptoMath.bit10log2(p)
     c1, msg = cipher
-    print("msg ",c1,msg)
-    unpad_content = padding.unpad_zeros(msg)
-    print("unpad msg ", unpad_content)
+    print("in decrypt")
+    unpad = padding.unpad_zeros(msg)
     
-    # split to each byte
-    msg_unpad_split = block_split_without_pad(unpad_content)
-    print("unpad split ",msg_unpad_split)
-    
-    real_cipher = "".join(msg_unpad_split)
-    print("real ",real_cipher)
-    split_real = block_split_without_pad(real_cipher, block_size)
-    print("split real ", split_real)
+    split_msg = block_split(unpad, block_size)
+    print(split_msg) 
     
     if cryptoMath.mod_exp(c1, p-1, p) == 1:
         x = cryptoMath.mod_exp(c1, p-1-pvK, p)
@@ -62,43 +59,47 @@ def ElgamalDecrypt(pvK,cipher, p, block_size):
         return "Something went wrong with ciphertext or private key" 
     content = []
     
-    for bi in split_real:
-        b = binary_to_int(bi)
-        print("bi to int ", b)
-        content.append(b)
-    
     de_msg = []
-    for i in content:
-        print("i = ",i)
-        t = (i*x)%p
-        print("ch is ", t)
+    for i in split_msg:
+        data = int(i,2)
+        t = (data*x)%p
+        print("i = ",data, " ch is ", t)
+        # print("ch is ", t)
         de_msg.append(t)
 
-    de_msg_binary = byte_to_binary(de_msg)
-    de_msg_split = block_split(de_msg_binary, block_size)
-    print("decipher split ", de_msg_split)
+    # from integer to binary
+    de_msg_binary = int_to_binary(de_msg)
+    # from binary split to each byte
+    if('txt' in fileName):
+        de_msg_split = block_split(de_msg_binary, 7)
+    else:
+        de_msg_split = block_split(de_msg_binary, 8)
+    # print("decipher split ", de_msg_split)
     
     de_msg_byte = []
-    for bin in de_msg_split:
-        de_msg_byte.append(binary_to_int(bin)%p)
+    for msg in de_msg_split:
+        num = int(msg,2)
+        de_msg_byte.append(num)
         
     print("plaintext ", de_msg_byte)
     
-    return result
+    return de_msg_byte
 
-def block_split_without_pad(text, block_size=8):
+
+def block_split_without_fill(text, block_size=8):
     blocks = []
-    size = 0
+    padlen = 0
     for i in range(0, len(text), block_size):
-        if(size > len(text)):
-            bi = text[i:i+size-block_size]
-        else:    
+        print("len ", len(text), " idx : ", i)
+        if(i+block_size < len(text)):
             bi = text[i:i+block_size]
-        # blocks.append(bin)
-        size += block_size
+        else:
+            bi = text[i:len(text)]
+        i+=block_size
         blocks.append(bi)
     print("block split to ", blocks)
     return blocks
+
 
 def block_split(text, block_size=8):
     """
@@ -116,11 +117,12 @@ def block_split(text, block_size=8):
     for i in range(0, len(text), block_size):
         bi = text[i:i+block_size]
         # blocks.append(bin)
+        print("len ", len(text), " idx : ", i)
         if(len(bi)==block_size):
             blocks.append(bi)
         else:
             pad = padding.pad_with_zeros(bi, block_size)
-            print("blocking pad ",pad)
+            # print("blocking pad ",pad)
             blocks.append(pad)
     print("block split to ", blocks)
     return blocks
@@ -138,6 +140,19 @@ def binary_to_byte(numbers):
     # print("Byte value:", byte_value)
     return byte_value
 
+def binary_to_byte_with_fill(numbers):
+    # print("binary to convert:", numbers)
+    
+    # Pad the binary string to make its length a multiple of 8
+    # padded_binary_string = padding.pad_with_zeros(numbers)
+    padded_binary_string = block_split_with_fill(numbers)
+    # print("padded = ", padded_binary_string)
+    
+    # Convert each byte to its integer value and then to bytes
+    byte_value = ([int(byte,2) for byte in padded_binary_string])
+    # print("Byte value:", byte_value)
+    return byte_value
+
 def binary_to_int(binary_string): 
     return int(binary_string,2)
 
@@ -148,8 +163,8 @@ def unpadded_binary(binary):
     print("unpadded")
     return bi_unpad
 
-def byte_to_binary(byte_list):
-    binary_list = [bin(byte)[2:] for byte in byte_list]
+def int_to_binary(int_list):
+    binary_list = [bin(byte)[2:] for byte in int_list]
     binary = "".join(binary_list)
     print("bin of byte ", binary)
 

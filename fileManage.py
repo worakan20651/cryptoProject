@@ -1,6 +1,7 @@
 import os
 from PIL import Image
 import struct
+import math
 
 
 def writeFile(content, fileName):
@@ -9,19 +10,24 @@ def writeFile(content, fileName):
     print("in print file -- : ", content)
     try:
         with open(new_file, "wb") as file:
-            for item in content:
-                # Iterate over the list
-                if(item == 0):
-                    c = b'\x00'
-                else:
-                    c = struct.pack('>q', item)
+            # file.write(content)
+
+            for num in content:
+                # item = int(num)
+                # print
+                # # Iterate over the list
+                if(num != 0):
+                    c = num.to_bytes(math.ceil(num.bit_length()/8), 'big')
                     # c = item.to_bytes(item.bit_length(), byteorder='big')
-                    c = remove_null_bytes(c)
+                else:
+                    c = b'\x00'
                 print("write ", c)
-                file.write(c)  # Assuming 4-byte unsigned integers
+                file.write(c)
         print("complete writing file ", new_file)
-    except Exception:
-        print("something went wrong while writing file")
+    except FileNotFoundError:
+        print("File not found")
+    except Exception as e:
+        print("something went wrong while writing file ",e)
 
 def remove_null_bytes(data):
     return data.replace(b'\x00', b'')
@@ -54,6 +60,8 @@ def read_Byte_in_File(fileName):
                 byte = file.read(1)
             
             remaining_bytes = file.read()  # Read the remaining bytes after encountering '\x00'
+            print("first ", binary_string)
+            print("second ",remaining_bytes)
             return binary_string, remaining_bytes
     except FileNotFoundError:
         print("File not found")

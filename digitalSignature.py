@@ -1,10 +1,11 @@
 import cryptoMath
 import random
-import hashlib
+import RWHash
 import math
 
 def hash(msg, prime):
-    hashed_msg = int.from_bytes(hashlib.sha256(msg.encode()).digest(), byteorder='big')
+    # msg -> binary string representation
+    hashed_msg = int.from_bytes()
     
     size = int(math.log10(prime)+1)
     

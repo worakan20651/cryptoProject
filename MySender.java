@@ -36,6 +36,8 @@ public class MySender {
 
         }
 
+        System.out.println("print binary "+binary);
+
         String filedata = fileManage.writeBinary(binary, fileName);
 
         try {
