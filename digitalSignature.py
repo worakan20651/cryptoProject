@@ -9,13 +9,9 @@ def hash(msg, prime):
     
     size = int(math.log10(prime)+1)
     
-    # Trim or pad the hash to the desired size
-    if len(hashed_msg) > size:
-        return hashed_msg[:size]
-    elif len(hashed_msg) < size:
-        return hashed_msg + b'\x00' * (size - len(hashed_msg))
-    else:
-        return hashed_msg
+    hash_fuch = RWHash.RWHash(hashed_msg, size)
+    
+    return hash_fuch
 
 
 def signature(msg, pbK):
@@ -41,7 +37,7 @@ def signature(msg, pbK):
 def verif(msg, pbK, sign):
     p,g,y = pbK
     
-    r, s = msg
+    r, s = sign
     
     if r < 1 or r >= p or s < 1 or s >= (p - 1):
         return False
